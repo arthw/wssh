@@ -16,7 +16,7 @@ it ships with two command line tools: `wsshd` (the server) and `wssh` (the clien
 
 ```
 $ wsshd 
-wsshd/0.1.0 running on 0.0.0.0:5000
+wsshd/0.2.1 running on 0.0.0.0:5000
 ```
 
 ```
