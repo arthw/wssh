@@ -18,6 +18,7 @@ from paramiko.rsakey import RSAKey
 from paramiko.ssh_exception import SSHException
 
 import socket
+import time
 
 try:
     import simplejson as json
@@ -111,6 +112,8 @@ class WSSHBridge(object):
             while True:
                 data = self._websocket.receive()
                 if not data:
+                    channel.send('\x03\rexit\r')
+                    time.sleep(10)
                     return
                 data = json.loads(str(data))
                 if 'resize' in data:
@@ -127,10 +130,13 @@ class WSSHBridge(object):
         try:
             while True:
                 wait_read(channel.fileno())
-                data = channel.recv(1024)
+                data = channel.recv(10240)
                 if not len(data):
                     return
                 self._websocket.send(json.dumps({'data': data}))
+        except Exception as e:
+            channel.send('\x03\rexit\r')
+            time.sleep(10)
         finally:
             self.close()
 
